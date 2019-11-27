@@ -57,7 +57,7 @@ public class SAMLAttributeQueryRequestClient {
     private static final String SOAP_ACTION = "http://wso2.org/identity/saml/query";
     private static final String DIGEST_METHOD_ALGO = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
     private static final String SIGNING_ALGO = "http://www.w3.org/2000/09/xmldsig#sha1";
-    private static final String TRUST_STORE = "client-truststore.jks";
+    private static final String TRUST_STORE = "wso2carbon.jks";
     private static final String TRUST_STORE_PASSWORD = "wso2carbon";
     private static final String ISSUER_ID = "travelocity.com";
     private static final String NAME_ID = "admin";
