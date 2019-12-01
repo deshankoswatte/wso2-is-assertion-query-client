@@ -21,13 +21,7 @@
 package org.wso2.carbon.identity.query.saml.test.errordemo;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -48,10 +42,10 @@ import org.opensaml.saml.saml2.core.impl.SubjectConfirmationBuilder;
 import org.opensaml.saml.saml2.core.impl.SubjectConfirmationDataBuilder;
 import org.wso2.carbon.identity.query.saml.exception.IdentitySAML2QueryException;
 import org.wso2.carbon.identity.query.saml.test.SPSignKeyDataHolder;
+import org.wso2.carbon.identity.query.saml.test.TestUtils;
 import org.wso2.carbon.identity.query.saml.util.OpenSAML3Util;
 import org.wso2.carbon.identity.query.saml.util.SAMLQueryRequestUtil;
 
-import java.io.File;
 import java.util.UUID;
 
 
@@ -59,12 +53,8 @@ public class InvalidIssuer {
 
     private final static Log log = LogFactory.getLog(InvalidIssuer.class);
 
-    private static final String END_POINT = "https://localhost:9443/services/SAMLQueryService";
-    private static final String SOAP_ACTION = "http://wso2.org/identity/saml/query";
     private static final String DIGEST_METHOD_ALGO = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
     private static final String SIGNING_ALGO = "http://www.w3.org/2000/09/xmldsig#sha1";
-    private static final String TRUST_STORE = "wso2carbon.jks";
-    private static final String TRUST_STORE_PASSWORD = "wso2carbon";
     private static final String ISSUER_ID = "travelocity1.com";
     private static final String NAME_ID = "admin";
 
@@ -118,17 +108,13 @@ public class InvalidIssuer {
             throw new IdentitySAML2QueryException("Error while marshalling the request.", e);
         }
 
-        String trustStore = (new File("")).getAbsolutePath() + File.separator + "src" + File.separator +
-                "test" + File.separator + "resources" + File.separator + TRUST_STORE;
-
         /*
            Setting trust store. This is required if you are using SSL (HTTPS) transport WSO2
            Carbon server's certificate must be in the trust store file that is defined below
            You need to set this for security scenario 01.
          */
 
-        System.setProperty("javax.net.ssl.trustStore", trustStore);
-        System.setProperty("javax.net.ssl.trustStorePassword", TRUST_STORE_PASSWORD);
+        TestUtils.setSystemProperties();
 
         /*
            Creating axis2 configuration using repo that we defined and using default axis2.xml. If
@@ -136,39 +122,11 @@ public class InvalidIssuer {
            passing null.
          */
 
-        ConfigurationContext configurationContext;
-        ServiceClient serviceClient;
-
-        try {
-            configurationContext = ConfigurationContextFactory.
-                    createConfigurationContextFromFileSystem(null, null);
-            serviceClient = new ServiceClient(configurationContext, null);
-
-        } catch (AxisFault axisFault) {
-            log.error("Error creating axis2 service client !!! " + axisFault);
-            throw new IdentitySAML2QueryException("Error creating axis2 service client", axisFault);
-        }
-
-        Options options = new Options();
-        // Security scenario 01 must use the SSL.  So we need to call HTTPS endpoint of the service.
-        options.setTo(new EndpointReference(END_POINT));
-        // Set the operation that you are calling in the service.
-        options.setAction(SOAP_ACTION);
-        // Set above options to service client.
-        serviceClient.setOptions(options);
+        ServiceClient serviceClient = TestUtils.createServiceClient();
+        serviceClient.setOptions(TestUtils.setOptionsForServiceClient());
 
         // Set message to service.
-        OMElement result;
-        try {
-            result = serviceClient.sendReceive(AXIOMUtil.stringToOM(body));
-            System.out.println("Message is sent");
-        } catch (AxisFault axisFault) {
-            log.error("Error invoking service !!! " + axisFault);
-            throw new IdentitySAML2QueryException("Error invoking service", axisFault);
-        } catch (Exception e) {
-            log.error("Error invoking service !!! " + e);
-            throw new IdentitySAML2QueryException("Error invoking service", e);
-        }
+        OMElement result = TestUtils.receiveResultFromServiceClient(serviceClient, body);
 
         // Printing return message.
         if (result != null) {
