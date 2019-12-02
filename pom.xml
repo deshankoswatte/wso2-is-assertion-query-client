@@ -23,13 +23,12 @@
     <groupId>org.wso2.carbon.identity</groupId>
     <artifactId>org.wso2.carbon.identity.query.saml.test</artifactId>
     <version>1.0.0</version>
-    <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
             <artifactId>org.wso2.carbon.identity.query.saml</artifactId>
-            <version>5.7.6-SNAPSHOT</version>
+            <version>${saml.query.profile.version}</version>
         </dependency>
     </dependencies>
 
@@ -78,5 +77,9 @@
             <url>http://dist.wso2.org/maven2</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <properties>
+        <saml.query.profile.version>5.7.6-SNAPSHOT</saml.query.profile.version>
+    </properties>
 
 </project>
