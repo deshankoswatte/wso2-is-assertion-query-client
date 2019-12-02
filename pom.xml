@@ -79,7 +79,7 @@
     </pluginRepositories>
 
     <properties>
-        <saml.query.profile.version>5.7.6-SNAPSHOT</saml.query.profile.version>
+        <saml.query.profile.version>5.7.7</saml.query.profile.version>
     </properties>
 
 </project>
