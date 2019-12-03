@@ -29,6 +29,20 @@
             <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
             <artifactId>org.wso2.carbon.identity.query.saml</artifactId>
             <version>${saml.query.profile.version}</version>
+            <!--Uncomment the commented exclusions if you want to disable logging-->
+
+            <!--<exclusions>-->
+                <!--&lt;!&ndash;Excluded to avoid unnecessary logging&ndash;&gt;-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.ops4j.pax.logging</groupId>-->
+                    <!--<artifactId>pax-logging-api</artifactId>-->
+                <!--</exclusion>-->
+                <!--&lt;!&ndash;Excluded to avoid NoClassDefError&ndash;&gt;-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.rampart.wso2</groupId>-->
+                    <!--<artifactId>rampart-trust</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
         </dependency>
     </dependencies>
 
